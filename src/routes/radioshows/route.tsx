@@ -1,5 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
+import { RadioShowsPageComponent } from "./-components/RadioShowsPageComponent";
 
-export const Route = createFileRoute('/radioshows')({
-  component: () => <div>Hello /radioshows!</div>
-})
+export const Route = createFileRoute("/radioshows")({
+  component: RadioShowsPageComponent,
+});

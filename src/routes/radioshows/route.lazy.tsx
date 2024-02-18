@@ -1,5 +1,6 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { RadioShowsPageComponent } from "./-components/RadioShowsPageComponent";
 
-export const Route = createLazyFileRoute('/radioshows')({
-  component: () => <div>Hello /radioshows!</div>
-})
+export const Route = createLazyFileRoute("/radioshows")({
+  component: RadioShowsPageComponent
+});
