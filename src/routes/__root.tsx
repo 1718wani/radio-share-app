@@ -8,8 +8,15 @@ export const Route = createRootRoute({
         <Link to="/" className="[&.active]:font-bold">
           Home
         </Link>{" "}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
+        <Link to="/radioshows" className="[&.active]:font-bold">
+          一覧
+        </Link>
+        <Link
+          to="/radioshows/$radioshowId"
+          params={{ radioshowId: "1" }}
+          className="[&.active]:font-bold"
+        >
+          詳細
         </Link>
       </div>
       <hr />
