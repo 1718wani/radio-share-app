@@ -12,7 +12,8 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as RadioshowsRouteImport } from './routes/radioshows/route'
-import { Route as RadioshowsRadioshowIdRouteImport } from './routes/radioshows/$radioshowId/route'
+import { Route as FavoritesRouteImport } from './routes/favorites/route'
+import { Route as RadioshowIdRouteImport } from './routes/$radioshowId/route'
 
 // Create/Update Routes
 
@@ -23,26 +24,33 @@ const RadioshowsRouteRoute = RadioshowsRouteImport.update({
   import('./routes/radioshows/route.lazy').then((d) => d.Route),
 )
 
-const RadioshowsRadioshowIdRouteRoute = RadioshowsRadioshowIdRouteImport.update(
-  {
-    path: '/$radioshowId',
-    getParentRoute: () => RadioshowsRouteRoute,
-  } as any,
-).lazy(() =>
-  import('./routes/radioshows/$radioshowId/route.lazy').then((d) => d.Route),
+const FavoritesRouteRoute = FavoritesRouteImport.update({
+  path: '/favorites',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RadioshowIdRouteRoute = RadioshowIdRouteImport.update({
+  path: '/$radioshowId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/$radioshowId/route.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$radioshowId': {
+      preLoaderRoute: typeof RadioshowIdRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/favorites': {
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/radioshows': {
       preLoaderRoute: typeof RadioshowsRouteImport
       parentRoute: typeof rootRoute
-    }
-    '/radioshows/$radioshowId': {
-      preLoaderRoute: typeof RadioshowsRadioshowIdRouteImport
-      parentRoute: typeof RadioshowsRouteImport
     }
   }
 }
@@ -50,7 +58,9 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  RadioshowsRouteRoute.addChildren([RadioshowsRadioshowIdRouteRoute]),
+  RadioshowIdRouteRoute,
+  FavoritesRouteRoute,
+  RadioshowsRouteRoute,
 ])
 
 /* prettier-ignore-end */
