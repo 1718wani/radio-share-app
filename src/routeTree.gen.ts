@@ -11,46 +11,75 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as RadioshowsRouteImport } from './routes/radioshows/route'
 import { Route as FavoritesRouteImport } from './routes/favorites/route'
-import { Route as RadioshowIdRouteImport } from './routes/$radioshowId/route'
+import { Route as RadioshowsListRouteImport } from './routes/radioshows/list/route'
+import { Route as RadioshowsCreateRouteImport } from './routes/radioshows/create/route'
+import { Route as RadioshowsRadioshowIdRouteImport } from './routes/radioshows/$radioshowId/route'
+import { Route as RadioshowsRadioshowIdListRouteImport } from './routes/radioshows/$radioshowId/list/route'
 
 // Create/Update Routes
-
-const RadioshowsRouteRoute = RadioshowsRouteImport.update({
-  path: '/radioshows',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/radioshows/route.lazy').then((d) => d.Route),
-)
 
 const FavoritesRouteRoute = FavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => rootRoute,
 } as any)
 
-const RadioshowIdRouteRoute = RadioshowIdRouteImport.update({
-  path: '/$radioshowId',
+const RadioshowsListRouteRoute = RadioshowsListRouteImport.update({
+  path: '/radioshows/list',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/$radioshowId/route.lazy').then((d) => d.Route),
+  import('./routes/radioshows/list/route.lazy').then((d) => d.Route),
 )
+
+const RadioshowsCreateRouteRoute = RadioshowsCreateRouteImport.update({
+  path: '/radioshows/create',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/radioshows/create/route.lazy').then((d) => d.Route),
+)
+
+const RadioshowsRadioshowIdRouteRoute = RadioshowsRadioshowIdRouteImport.update(
+  {
+    path: '/radioshows/$radioshowId',
+    getParentRoute: () => rootRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/radioshows/$radioshowId/route.lazy').then((d) => d.Route),
+)
+
+const RadioshowsRadioshowIdListRouteRoute =
+  RadioshowsRadioshowIdListRouteImport.update({
+    path: '/list',
+    getParentRoute: () => RadioshowsRadioshowIdRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/radioshows/$radioshowId/list/route.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$radioshowId': {
-      preLoaderRoute: typeof RadioshowIdRouteImport
-      parentRoute: typeof rootRoute
-    }
     '/favorites': {
       preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRoute
     }
-    '/radioshows': {
-      preLoaderRoute: typeof RadioshowsRouteImport
+    '/radioshows/$radioshowId': {
+      preLoaderRoute: typeof RadioshowsRadioshowIdRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/radioshows/create': {
+      preLoaderRoute: typeof RadioshowsCreateRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/radioshows/list': {
+      preLoaderRoute: typeof RadioshowsListRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/radioshows/$radioshowId/list': {
+      preLoaderRoute: typeof RadioshowsRadioshowIdListRouteImport
+      parentRoute: typeof RadioshowsRadioshowIdRouteImport
     }
   }
 }
@@ -58,9 +87,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  RadioshowIdRouteRoute,
   FavoritesRouteRoute,
-  RadioshowsRouteRoute,
+  RadioshowsRadioshowIdRouteRoute.addChildren([
+    RadioshowsRadioshowIdListRouteRoute,
+  ]),
+  RadioshowsCreateRouteRoute,
+  RadioshowsListRouteRoute,
 ])
 
 /* prettier-ignore-end */

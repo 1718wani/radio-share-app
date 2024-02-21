@@ -12,7 +12,7 @@ export const RadioShowsCard = (props: props) => {
 
 
   return (
-    <Link  to="/$radioshowId" params={{ radioshowId: "1" }} >
+    <Link  to="/radioshows/$radioshowId/list" params={{ radioshowId: "1" }} >
       <Card shadow="sm" padding="xl" component="a" withBorder>
         <Card.Section>
           <Image src={imageUrl} h={160} />
