@@ -24,9 +24,9 @@ export const RadioShowHeader = () => {
         />
         <Box>
           <Title
-          order={3}
+            order={3}
             c={"gray.0"}
-            style={{ position: "absolute", left:0, bottom:0, zIndex: 1000 }}
+            style={{ position: "absolute", left: 0, bottom: 0, zIndex: 1000 }}
             p={8}
           >
             霜降り明星のオールナイトニッポン

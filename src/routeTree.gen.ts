@@ -14,7 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as FavoritesRouteImport } from './routes/favorites/route'
 import { Route as RadioshowsListRouteImport } from './routes/radioshows/list/route'
 import { Route as RadioshowsCreateRouteImport } from './routes/radioshows/create/route'
-import { Route as RadioshowsRadioshowIdRouteImport } from './routes/radioshows/$radioshowId/route'
+import { Route as RadioshowsRadioshowIdShareRouteImport } from './routes/radioshows/$radioshowId/share/route'
 import { Route as RadioshowsRadioshowIdListRouteImport } from './routes/radioshows/$radioshowId/list/route'
 
 // Create/Update Routes
@@ -38,19 +38,20 @@ const RadioshowsCreateRouteRoute = RadioshowsCreateRouteImport.update({
   import('./routes/radioshows/create/route.lazy').then((d) => d.Route),
 )
 
-const RadioshowsRadioshowIdRouteRoute = RadioshowsRadioshowIdRouteImport.update(
-  {
-    path: '/radioshows/$radioshowId',
+const RadioshowsRadioshowIdShareRouteRoute =
+  RadioshowsRadioshowIdShareRouteImport.update({
+    path: '/radioshows/$radioshowId/share',
     getParentRoute: () => rootRoute,
-  } as any,
-).lazy(() =>
-  import('./routes/radioshows/$radioshowId/route.lazy').then((d) => d.Route),
-)
+  } as any).lazy(() =>
+    import('./routes/radioshows/$radioshowId/share/route.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const RadioshowsRadioshowIdListRouteRoute =
   RadioshowsRadioshowIdListRouteImport.update({
-    path: '/list',
-    getParentRoute: () => RadioshowsRadioshowIdRouteRoute,
+    path: '/radioshows/$radioshowId/list',
+    getParentRoute: () => rootRoute,
   } as any).lazy(() =>
     import('./routes/radioshows/$radioshowId/list/route.lazy').then(
       (d) => d.Route,
@@ -65,10 +66,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRoute
     }
-    '/radioshows/$radioshowId': {
-      preLoaderRoute: typeof RadioshowsRadioshowIdRouteImport
-      parentRoute: typeof rootRoute
-    }
     '/radioshows/create': {
       preLoaderRoute: typeof RadioshowsCreateRouteImport
       parentRoute: typeof rootRoute
@@ -79,7 +76,11 @@ declare module '@tanstack/react-router' {
     }
     '/radioshows/$radioshowId/list': {
       preLoaderRoute: typeof RadioshowsRadioshowIdListRouteImport
-      parentRoute: typeof RadioshowsRadioshowIdRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/radioshows/$radioshowId/share': {
+      preLoaderRoute: typeof RadioshowsRadioshowIdShareRouteImport
+      parentRoute: typeof rootRoute
     }
   }
 }
@@ -88,11 +89,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   FavoritesRouteRoute,
-  RadioshowsRadioshowIdRouteRoute.addChildren([
-    RadioshowsRadioshowIdListRouteRoute,
-  ]),
   RadioshowsCreateRouteRoute,
   RadioshowsListRouteRoute,
+  RadioshowsRadioshowIdListRouteRoute,
+  RadioshowsRadioshowIdShareRouteRoute,
 ])
 
 /* prettier-ignore-end */
